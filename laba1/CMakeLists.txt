@@ -20,14 +20,14 @@ include_directories("assets/")
 
 add_executable("${PROJECT_NAME}" laba1.cpp)
 											
-target_link_libraries("${PROJECT_NAME}" sfml-graphics-s
-						  sfml-window-s
-						  sfml-system-s
+target_link_libraries("${PROJECT_NAME}" sfml-graphics-s-d
+						  sfml-window-s-d
+						  sfml-system-s-d
 						  opengl32
 						  freetype
 						  winmm
 						  gdi32
-						  sfml-audio-s
+						  sfml-audio-s-d
 						  openal32
 						  flac
 						  vorbisenc

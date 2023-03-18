@@ -37,6 +37,7 @@ public:
 				a_count++;
 				a_clock.restart();
 				a_current_text = a_full_text.substr(0, a_count);
+				std::cout << a_current_text << ".";
 			}
 		}
 	}
@@ -67,6 +68,7 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
+		text.changeText();
         window.draw(text.getText());
         window.display();
     }
