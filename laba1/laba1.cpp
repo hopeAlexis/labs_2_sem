@@ -4,45 +4,72 @@
 class AnimatedText
 {
 private:
-	std::string a_text;
+	sf::Text a_text;
+	sf::Font a_font;
+	std::string a_full_text;
 	std::string a_current_text = "";
 	float a_duration;
 	int a_length;
-	float a_frequency;
+	sf::Time a_frequency;
 	int a_count = 0;
-	float a_clock;
+	sf::Clock a_clock;
 
 public:
 	AnimatedText(std::string text, float duration)
 	{
-		a_text = text;
+		a_full_text = text;
 		a_duration = duration;
 		a_length = text.size();
-		a_frequency = a_duration / a_length;
+		a_frequency = sf::milliseconds(a_duration / a_length);
+		a_font.loadFromFile("BebasNeue-Regular.ttf");
+		a_text.setFont(a_font);
+		a_text.setString(a_current_text);
+		a_text.setCharacterSize(24);
+		a_text.setFillColor(sf::Color::Blue);
 	}
 
-	//float getFrequency()
-	//{
-	//	return a_frequency;
-	//}
-
-	//int getCount()
-	//{
-	//	return a_count;
-	//}
-
-	void printText()
+	void changeText()
 	{
 		if (a_count != a_length)
 		{
-			if (a_clock = a_frequency)
+			if (a_clock.getElapsedTime() == a_frequency)
 			{
 				a_count++;
-				a_clock = 0;
-				a_current_text = a_text.substr(0, a_count);
-
+				a_clock.restart();
+				a_current_text = a_full_text.substr(0, a_count);
 			}
 		}
 	}
 
+	sf::Text getText()
+	{
+		return a_text;
+	}
+
+	//void drawText()
+	//{
+	//	
+	//}
+
 };
+
+int main()
+{
+    unsigned int w_width = 800, w_height = 500;
+	sf::RenderWindow window(sf::VideoMode(w_width, w_height), "laba1");
+	AnimatedText text("Hello world!", 13);
+    while (window.isOpen())
+    {
+        sf::Event event;
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
+        window.draw(text.getText());
+        window.display();
+    }
+
+    return 0;
+}
