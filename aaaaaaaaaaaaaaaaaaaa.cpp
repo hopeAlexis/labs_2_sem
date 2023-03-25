@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <string>
 
 class Cipher
@@ -8,6 +8,7 @@ private:
 	int c_wordAmount = 0;
 	std::string c_message = "";
 	std::string c_words[30];
+	int c_code[30];
 
 	void fiboFinder()
 	{
@@ -24,7 +25,6 @@ private:
 			if (message[i] == ' ')
 			{
 				c_wordAmount++;
-
 			}
 		}
 	}
@@ -37,17 +37,35 @@ public:
 		wordCount(str);
 		fiboFinder();
 
-		int count = 0;
-		int 
+		int count = -1;
 
-		for (size_t i = 0; i < str.length(); i++)
+		for (size_t i = 0; i < c_wordAmount; i++) //input into c_words array
 		{
-			if (str[i] == ' ')
+			count++;
+			while (str[count] != ' ')
 			{
-				c_words[count] = str.substr()
+				if (count >= str.length())
+				{
+					break;
+				}
+				c_words[i] += str[count];
+				count++;
 			}
 		}
 	}
+
+	void encode()
+	{
+
+	}
+
+	void decode()
+	{
+
+	}
+
+
+
 };
 
 
