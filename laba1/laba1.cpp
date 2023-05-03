@@ -20,37 +20,43 @@ public:
 		a_full_text = text;
 		a_duration = duration;
 		a_length = text.size();
-		a_frequency = sf::milliseconds(a_duration / a_length);
+		a_frequency = sf::seconds(a_duration / a_length);
 		a_font.loadFromFile("BebasNeue-Regular.ttf");
 		a_text.setFont(a_font);
 		a_text.setString(a_current_text);
 		a_text.setCharacterSize(24);
 		a_text.setFillColor(sf::Color::Blue);
+		a_text.setPosition(100, 100);
 	}
 
 	void changeText()
 	{
 		if (a_count != a_length)
 		{
-			if (a_clock.getElapsedTime() == a_frequency)
+			if (getTime().asMilliseconds() == a_frequency.asMilliseconds()) 
 			{
 				a_count++;
 				a_clock.restart();
 				a_current_text = a_full_text.substr(0, a_count);
-				std::cout << a_current_text << ".";
+				std::cout << a_current_text << "\n";
 			}
 		}
+	}
+
+	sf::Time getTime()
+	{
+		return a_clock.getElapsedTime();
+	}
+
+	sf::Time getFrequency()
+	{
+		return a_frequency;
 	}
 
 	sf::Text getText()
 	{
 		return a_text;
 	}
-
-	//void drawText()
-	//{
-	//	
-	//}
 
 };
 
@@ -69,9 +75,10 @@ int main()
 				window.close();
 		}
 		text.changeText();
+		window.clear(sf::Color::White);
         window.draw(text.getText());
         window.display();
     }
-
+	std::cout << text.getFrequency().asSeconds();
     return 0;
 }
