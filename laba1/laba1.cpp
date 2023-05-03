@@ -24,9 +24,9 @@ public:
 		a_font.loadFromFile("BebasNeue-Regular.ttf");
 		a_text.setFont(a_font);
 		a_text.setString(a_current_text);
-		a_text.setCharacterSize(24);
-		a_text.setFillColor(sf::Color::Blue);
-		a_text.setPosition(100, 100);
+		a_text.setCharacterSize(50);
+		a_text.setFillColor(sf::Color::Magenta);
+		a_text.setPosition(20, 200);
 	}
 
 	void changeText()
@@ -38,6 +38,7 @@ public:
 				a_count++;
 				a_clock.restart();
 				a_current_text = a_full_text.substr(0, a_count);
+				a_text.setString(a_current_text);
 				std::cout << a_current_text << "\n";
 			}
 		}
@@ -79,6 +80,5 @@ int main()
         window.draw(text.getText());
         window.display();
     }
-	std::cout << text.getFrequency().asSeconds();
     return 0;
 }
