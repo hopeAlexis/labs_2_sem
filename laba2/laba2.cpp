@@ -26,20 +26,33 @@ class String
 {
 private:
 	size_t s_size = 0;
-	char* s_str = nullptr; //why * ?
+	char* s_str = nullptr; //why * ? because of dynamic memory
+
 public:
 	friend std::ostream& operator << (std::ostream& out, const String& str); //output using a friend method
 	friend std::istream& operator >> (std::istream& in, String& str); //input
 
-	String(const char* str) : s_size(strlen(str)), s_str(new char[s_size + 1]) //base costructor
+	String(const char* str) : s_size(strlen(str)), s_str(new char[s_size + 1])		//base costructor
 	{
+		std::cout << "Constructor 1\n";
 		std::copy(str, str + s_size + 1, s_str); // +1 for terminating symbol 
 	}
 
-	String(char )
-
-	~String() //destructor
+	String(char symbol, size_t size) : s_size(size), s_str(new char[size + 1])
 	{
+		std::cout << "Constructor 2\n";
+		std::fill(s_str, s_str + s_size, symbol);		//assign the value in the range
+		s_str[size] = '\0';	//add the terminating symbol at the end
+	}
+
+	String(const String& other) : String(other.s_str)		//copy constructor + delegating constructor
+	{
+		std::cout << "Constructor copy\n";
+	}
+
+	~String()		//destructor
+	{
+		std::cout << "Destructor\n";
 		if (s_str != nullptr)
 			delete[] s_str;
 	}
@@ -81,8 +94,10 @@ std::istream& operator >> (std::istream& in, String& str)
 
 int main()
 {
+	String s1("Hello!");
+	String s2 = s1;
 
+	std::cout << s1 << "\n" << s2;
 
-	String string("Hello!");
-
+	return 0;
 }
