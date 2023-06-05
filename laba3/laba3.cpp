@@ -80,13 +80,13 @@ public:
 		return temp;
 	}
 
-	Complex& operator ++ ()		// префикс, сначала прибавляем к значению m_re 1, затем возвращаем ссылку на объект
+	Complex& operator ++ ()		// prefix
 	{
 		this->c_re++;
 		return *this;
 	}
 
-	Complex operator ++ (int)	// постфикс, сначала присваиваем новому объекту значение m_re, затем прибавляем 1
+	Complex operator ++ (int)	// postfix
 	{
 		Complex temp = *this;
 		++this->c_re;
@@ -98,7 +98,7 @@ std::ostream& operator << (std::ostream& out, const Complex& complex)
 {
 	if (complex.c_im < 0)
 	{
-		out << complex.c_re << " - " << complex.c_im * (-1) << "i";
+		out << complex.c_re << " - " << (-1) * complex.c_im  << "i";
 	}
 	else
 	{
@@ -117,14 +117,17 @@ std::istream& operator >> (std::istream& in, Complex& c)
 
 int main()
 {
-	Complex c1(1, 2);
-	Complex c2(3, 4);
+	Complex c1(2, 4);
+	Complex c2(1, 5);
 	Complex c3 = c1 + c2;
-	std::cout << "c3: " << c3 << std::endl;
-	c1 *= c2;
-	std::cout << "c: " << c1 << std::endl;
-	Complex plusC = ++c1;
-	std::cout << "++c: " << plusC << std::endl;
-	Complex Cplus = c1++;
-	std::cout << "c++: " << Cplus << std::endl;
+	std::cout << c3 << "\n";
+
+	c2 *= c1;
+	std::cout << c2 << "\n";
+
+	Complex ppC = ++c3;
+	std::cout << "++c = " << ppC << "\n";
+
+	Complex cPP = c1++;
+	std::cout << "c++ = " << cPP << "\n";
 }
