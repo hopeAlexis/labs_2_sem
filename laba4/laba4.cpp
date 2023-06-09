@@ -106,12 +106,11 @@ std::ostream& operator << (std::ostream& out, const Matrix<T, N, M>& matrix)
 {
     for (size_t i = 0; i < N; i++)
     {
-        out << "   ( ";
         for (size_t j = 0; j < M; j++)
         {
             out << matrix.m_arr[i][j] << ' ';
         }
-        out << ')' << std::endl;
+        out << "\n";
     }
     return out;
 }
@@ -137,24 +136,20 @@ int main()
 {
     try {
 
-        Matrix<int, 3, 3> a;
+        Matrix<int, 3, 3> M;
 
-        std::cin >> a;
-        std::cout << a;
-        std::cout << "Determinant: " << a.determinant() << std::endl;
-        std::cout << ++a << std::endl;
+        std::cin >> M;
+        std::cout << M;
+        std::cout << "Determinant = " << M.determinant() << "\n";
+        std::cout << ++M << "\n";
 
-        Matrix<int, 3, 3> b = a;
+        Matrix<int, 3, 3> B = M;
+        Matrix<int, 3, 3> C;
 
-        Matrix<int, 3, 3> c;
-
-        c = b = a;
-        std::cout << "Element: " << c.at(1, 1);
-        //std::cout << c << std::endl;
-        //setElement(c, 1, 1, 10);
-        //std::cout << c << std::endl;
+        C = B = M;
+        std::cout << "Element at 3 3 = " << C.at(3, 3);
     }
     catch (...) {
-        std::cout << "Determinant doesn't exist!";
+        std::cout << "No determinant for this type of matrix.";
     }
 }
