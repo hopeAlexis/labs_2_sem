@@ -10,9 +10,9 @@ struct BitInfo {
 template<>
 class std::vector<bool> {
 private:
-	unsigned char* m_arr; // указатель на динамически выделенную память
-	size_t m_allocatedBytes; // количество элементов в m_arr
-	size_t m_usedBits; // количество использованных бит в массиве
+	unsigned char* m_arr;
+	size_t m_availableBytes; // amount of elements in the array
+	size_t m_usedBits; // how much space is used
 
 	BitInfo getBitInfo(size_t bitIndex)
 	{
@@ -38,7 +38,8 @@ private:
 		return (*byte & (1 << (index))) != 0;
 	}
 
-	void setBit(unsigned char* array, size_t bitIndex, bool value) { // устанавливает в определенном индексе заданное значение
+	void setBit(unsigned char* array, size_t bitIndex, bool value) 
+	{
 
 		BitInfo bitInfo = getBitInfo(bitIndex);
 		unsigned char* byte = &array[bitInfo.byteIndex];
@@ -51,22 +52,23 @@ private:
 		}
 	}
 
-	bool getBit(unsigned char* array, size_t bitIndex) {	// возвращает значение по этому индексу
+	bool getBit(unsigned char* array, size_t bitIndex) 
+	{
 		BitInfo bitInfo = getBitInfo(bitIndex);
 		return check(&array[bitInfo.byteIndex], bitInfo.bitIndex);
 	}
 
 public:
-	std::vector<bool>() : m_arr(new unsigned char[1]), m_allocatedBytes(1), m_usedBits(0) {}
+	std::vector<bool>() : m_arr(new unsigned char[1]), m_availableBytes(1), m_usedBits(0) {}
 
-	void add(bool value) 		//добавляет новое значение в конец
+	void add(bool value)
 	{
 		setBit(m_usedBits, value);
 
-		if (++m_usedBits == m_allocatedBytes * 8) 			// если необходимо, выделяем еще 1 байт
+		if (++m_usedBits == m_availableBytes * 8) 			// adds one byte if not enough space
 		{
-			unsigned char* temp = new unsigned char[++m_allocatedBytes];
-			for (size_t i = 0; i < m_allocatedBytes - 1; i++) {
+			unsigned char* temp = new unsigned char[++m_availableBytes];
+			for (size_t i = 0; i < m_availableBytes - 1; i++) {
 				temp[i] = m_arr[i];
 			}
 
@@ -75,13 +77,13 @@ public:
 		}
 	}
 
-	void insert(size_t bitIndex, bool value)	// вставляет значение по индексу, сдвигая все значения с этого индекса вперёд
+	void insert(size_t bitIndex, bool value)	// insert a value by pushing all elements forward
 	{
-		if (m_usedBits + 1 == m_allocatedBytes * 8) {
-			m_allocatedBytes++;
+		if (m_usedBits + 1 == m_availableBytes * 8) {
+			m_availableBytes++;
 		}
 
-		unsigned char* newArr = new unsigned char[m_allocatedBytes];
+		unsigned char* newArr = new unsigned char[m_availableBytes];
 		size_t currentIndex = 0;
 		while (currentIndex != bitIndex) {
 			setBit(newArr, currentIndex, getBit(m_arr, currentIndex));
@@ -102,16 +104,15 @@ public:
 		m_arr = newArr;
 	}
 
-	void erase(size_t startIndex, size_t endIndex) // удаляет диапазон значений и перезаписывает массив
+	void erase(size_t startIndex, size_t endIndex) //delete values in a range
 	{
-		// проверяем, правильные и индексы
-		if (m_usedBits == 0 || endIndex >= m_usedBits || endIndex < startIndex) {
+		
+		if (m_usedBits == 0 || endIndex >= m_usedBits || endIndex < startIndex) // error check
 			throw std::exception();
-		}
 
 		size_t bitsToRemove = endIndex - startIndex + 1;
 		size_t newUsedBits = m_usedBits - bitsToRemove;
-		size_t newAllocatedBytes = (size_t)std::ceill(newUsedBits / 8.0);
+		size_t newAllocatedBytes = (size_t)std::ceill(newUsedBits / 8.0); // std::ceill computes the smallest integer value not less than the arguement
 
 		unsigned char* newArr = new unsigned char[newAllocatedBytes];
 
@@ -125,33 +126,29 @@ public:
 		delete[] m_arr;
 
 		m_arr = newArr;
-		m_allocatedBytes = newAllocatedBytes;
+		m_availableBytes = newAllocatedBytes;
 		m_usedBits = newUsedBits;
 	}
 
-	// возвращает количество использованных бит
 	size_t size()
 	{
 		return m_usedBits;
 	}
 
-	// устанавливает значение по индексу
 	void setBit(size_t bitIndex, bool value)
 	{
 		setBit(m_arr, bitIndex, value);
 	}
 
-	// получает значение по индексу
 	bool getBit(size_t bitIndex)
 	{
 		return getBit(m_arr, bitIndex);
 	}
 
-
 	void print()
 	{
 		for (size_t i = 0; i < m_usedBits; i++) {
-			std::cout << getBit(i) << std::endl;
+			std::cout << getBit(i);
 		}
 	}
 };
@@ -160,19 +157,18 @@ public:
 int main() {
 
 	std::vector<bool> vector;
-	vector.add(true);					//[1]
-	vector.add(true);					//[11]
-	vector.insert(1, false);			//[101]
+	vector.add(true);					//1
+	vector.add(false);					//10
+	vector.insert(1, true);				//110
 	vector.print();
-	std::cout << std::endl;
+	std::cout << "\n";
 
-	vector.add(true);					//[1011]
-	vector.add(true);					//[10111]
-	vector.erase(1, 3);					//[11]
+	vector.add(true);					//1101
+	vector.add(true);					//11011
+	vector.erase(1, 3);					//11
 	vector.print();
-	std::cout << std::endl;
+	std::cout << "\n";
 
-	vector.setBit(vector.size() - 1, false);		//[10]
-	vector.add(true);								//[101]
+	vector.setBit(vector.size() - 1, false);		//10
 	vector.print();
 }
