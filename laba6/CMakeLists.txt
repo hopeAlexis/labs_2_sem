@@ -12,4 +12,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 include_directories("inc/")			 # указываем, где искать файлы заголовков
 
-add_executable("${PROJECT_NAME}" laba6.cpp)	# добавить исполняемый файл
+add_executable("${PROJECT_NAME}" laba6.cpp logger.cpp logger.hpp)	# добавить исполняемый файл
